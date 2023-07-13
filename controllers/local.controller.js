@@ -20,6 +20,7 @@ const local_create = async (req, res) => {
     const genero = req.body.genero;
     const descripcion = req.body.descripcion;
     const menu = req.body.menu;
+    const userId = req.body.userId;
   
     const existingLocal = await getLocal.findOne({ where: { namelocal: namelocal } });
     if (existingLocal) {
@@ -33,6 +34,7 @@ const local_create = async (req, res) => {
         genero,
         descripcion,
         menu,
+        userId
       })
       .then((contenido) => {
         res.send(contenido);
@@ -110,4 +112,29 @@ const local_delete = async (req,res) => {
     });
 }
 
-export const localController = {local_create,local_img,local_update,local_delete};
+const local_viewAll = async (req,res) => {
+  getLocal.findAll({ attributes: ["namelocal", "imagen", "genero","descripcion","menu"]})
+  
+  .then(local => {
+      res.send(local)
+  })
+  .catch(err => {
+      res.status(400).json({ err: 'Error al hacer la consulta' });    
+  })
+
+}
+
+const local_viewUser = async (req,res) => {
+  getLocal.findAll({ where: { userId: req.query.userId },
+    attributes: ["namelocal", "imagen", "genero","descripcion","menu"] })
+
+.then(local => {
+    res.send(local)
+})
+.catch(err => {
+    res.status(400).json({ err: 'Error al hacer la consulta' });    
+})
+
+}
+
+export const localController = {local_create,local_img,local_update,local_delete,local_viewAll,local_viewUser};

@@ -1,6 +1,7 @@
 import { getData } from "../config/connection.config.js";
 import { DataTypes } from "sequelize";
 import bcrypt from 'bcrypt';
+import { getLocal } from "./local.js";
 
 const login = getData.sequelizeClient.define('login',{
     id: {
@@ -35,5 +36,7 @@ const login = getData.sequelizeClient.define('login',{
          }
         }
     });
+
+    login.hasMany(getLocal, { foreignKey: 'userId' });
 
     export const getLogin = login;

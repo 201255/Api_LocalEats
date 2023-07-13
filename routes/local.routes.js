@@ -57,6 +57,7 @@ const verifyToken = (req, res, next) => {
  *              - genero
  *              - descripcion
  *              - menu
+ *              - userId
  *            properties:
  *              namelocal:
  *                type: string
@@ -74,6 +75,9 @@ const verifyToken = (req, res, next) => {
  *              menu:
  *                type: string
  *                default: 1234
+ *              userId:
+ *                type: string
+ *                default: 
  *     responses:
  *      200:
  *        description: Create
@@ -163,6 +167,27 @@ router.put('/updateLocal',upload.single('imagen'), (req, res) => localController
  */
 
 router.delete('/deleteLocal',upload.single('imagen'), (req, res) => localController.local_delete(req, res));
+
+
+/**
+ * @openapi
+ * '/api/local/viewAll':
+ *  get:
+ *     tags:
+ *     - local
+ *     summary: visualizar locales
+ *     responses:
+ *      200:
+ *        description: View
+ *      400:
+ *        description: Bad Request
+ *      404:
+ *        description: Not Found
+ */
+
+router.get('/viewAll', (req, res) => localController.local_viewAll(req, res));
+
+router.get('/viewUser', (req, res) => localController.local_viewUser(req, res));
 
 
 export default router;
