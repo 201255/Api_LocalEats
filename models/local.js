@@ -25,6 +25,10 @@ const local = getData.sequelizeClient.define('local',{
         type: DataTypes.STRING,
         allowNull: false,
     },
+    ubicacion: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
     menu:{
         type: DataTypes.STRING,
         allowNull: false,

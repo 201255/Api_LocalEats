@@ -19,7 +19,7 @@ const user_login = async (req, res) => {
             if (validPassword) {
                 const token = jwt.sign({
                     sub: user. name,
-                }, 'secret', { expiresIn: '30m' }, dataEnv.parsed.JWT_TOKEN_SECRET, { algorithm: 'HS256' })
+                }, 'secret')
                 user.token = token;
 
                 res.header('auth-token', token).json({

@@ -2,6 +2,8 @@ import { Router } from 'express';
 import bodyParser from 'body-parser';
 import { localController } from '../controllers/local.controller.js';
 import multer from 'multer';
+import jwt from 'jsonwebtoken';
+import  verifyToken  from '../middlewares/token.middleware.js'
 
 
 const router = Router();
@@ -22,20 +24,21 @@ filename: (req, file, cb) => {
 });
 const upload = multer({ storage });
 
-const verifyToken = (req, res, next) => {
-  const token = req.header('auth-token');
-  if (!token) {
-    return res.status(401).json({ error: 'Acceso no autorizado' });
-  }
+// const verifyToken = (req, res, next) => {
+//   const token = req.header('auth-token');
+//   if (!token) {
+//     return res.status(401).json({ error: 'Acceso no autorizado' });
+//   }
 
-  try {
-    const decoded = jwt.verify(token, 'secret');
-    req.user = decoded.sub;
-    next();
-  } catch (error) {
-    return res.status(401).json({ error: 'Token inválido' });
-  }
-};
+//   try {
+//     const decoded = jwt.verify(token, 'secret');
+//     req.user = decoded.sub;
+//     next();
+//   } catch (error) {
+//     // console.log(error);
+//     return res.status(401).json({ error: 'Token inválido' });
+//   }
+// };
 
 
 /**
@@ -56,6 +59,7 @@ const verifyToken = (req, res, next) => {
  *              - imagen
  *              - genero
  *              - descripcion
+ *              - ubicacion
  *              - menu
  *              - userId
  *            properties:
@@ -72,12 +76,15 @@ const verifyToken = (req, res, next) => {
  *              descripcion:
  *                type: string
  *                default: 1234
+ *              ubicacion:
+ *                type: string
+ *                default: Suchiapa, Chis
  *              menu:
  *                type: string
  *                default: 1234
  *              userId:
  *                type: string
- *                default: 
+ *                default:
  *     responses:
  *      200:
  *        description: Create
@@ -87,9 +94,12 @@ const verifyToken = (req, res, next) => {
  *        description: Not Found
  */
 
-router.post('/createLocal',upload.single('imagen'), (req, res) => localController.local_create(req, res));
+router.post('/createLocal',upload.single('imagen'),verifyToken, (req, res) => localController.local_create(req, res));
 
 router.get("/view_img", (req, res) => localController.local_img(req, res));
+
+router.get("/view_ubi_local", (req, res) => localController.view_ubi_local(req, res));
+
 
 /**
  * @openapi

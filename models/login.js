@@ -39,4 +39,6 @@ const login = getData.sequelizeClient.define('login',{
 
     login.hasMany(getLocal, { foreignKey: 'userId' });
 
+    // login.hasMany(getLocal, {foreignKey: 'tokenId'});
+
     export const getLogin = login;

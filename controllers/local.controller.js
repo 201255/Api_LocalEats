@@ -15,35 +15,42 @@ const jsonParser = bodyParser.json();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 
 const local_create = async (req, res) => {
-    const namelocal = req.body.namelocal;
-    const imagen = req.file.originalname;
-    const genero = req.body.genero;
-    const descripcion = req.body.descripcion;
-    const menu = req.body.menu;
-    const userId = req.body.userId;
-  
-    const existingLocal = await getLocal.findOne({ where: { namelocal: namelocal } });
-    if (existingLocal) {
-      return res.status(400).json({ error: 'El namelocal ya está en uso' });
-    }
-  
-    getLocal
-      .create({
-        namelocal,
-        imagen,
-        genero,
-        descripcion,
-        menu,
-        userId
-      })
-      .then((contenido) => {
-        res.send(contenido);
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(500).json({ error: 'Error al crear el registro' });
-      });
-  };
+  const namelocal = req.body.namelocal;
+  const imagen = req.file.originalname;
+  const genero = req.body.genero;
+  const descripcion = req.body.descripcion;
+  const menu = req.body.menu;
+  const userId = req.body.userId;
+  const ubicacion = req.body.ubicacion;
+  // const tokenId = req.body.tokenId; 
+
+  // if (!tokenId) {
+  //   return res.status(400).json({ error: 'Se requiere un token para crear el local' });
+  // }
+
+  const existingLocal = await getLocal.findOne({ where: { namelocal: namelocal } });
+  if (existingLocal) {
+    return res.status(400).json({ error: 'El namelocal ya está en uso' });
+  }
+
+  getLocal
+    .create({
+      namelocal,
+      imagen,
+      genero,
+      descripcion,
+      ubicacion,
+      menu,
+      userId,
+    })
+    .then((contenido) => {
+      res.send(contenido);
+    })
+    .catch((err) => {
+      // console.log(err);
+      res.status(400).json({ error: 'Error al crear el registro' });
+    });
+};
   
 
 const local_img = (function (req,res)  {
@@ -137,4 +144,16 @@ const local_viewUser = async (req,res) => {
 
 }
 
-export const localController = {local_create,local_img,local_update,local_delete,local_viewAll,local_viewUser};
+const view_ubi_local = async (req,res) => {
+  getLocal.findAll({ where: { ubicacion: req.query.ubicacion },
+    attributes: ["namelocal", "imagen", "genero","descripcion","menu"] })
+
+.then(local => {
+    res.send(local)
+})
+.catch(err => {
+    res.status(400).json({ err: 'Error al hacer la consulta' });    
+})
+}
+
+export const localController = {local_create,local_img,local_update,local_delete,local_viewAll,local_viewUser,view_ubi_local};
